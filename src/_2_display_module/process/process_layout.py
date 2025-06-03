@@ -1,15 +1,15 @@
 import npyscreen
-
+from _4_system_data import CRP_control
 class ProcessBox(npyscreen.BoxTitle):
     _contained_widget = npyscreen.MultiLine
     def __init__(self, screen, *args, **keywords):
-        process_data = [
-                ["1", "init", "Running"],
-                ["2", "bash", "Running"],
-                ["3", "python", "Sleeping"],
-                ["4", "nginx", "Stopped"]
-            ]
-        rows = [f"{pid:<6} {name:<15} {status:<10}" for pid, name, status in process_data]
+        CRP_control.get_list_proc()
+        
+        # Tạo các hàng để hiển thị từ list_proc
+        rows = []
+        for proc in CRP_control.list_proc:
+            row = f"{proc['pid']:<6} {proc['name'][:15]:<15} {proc['status']:<10} {proc['cpu_percent']:<8} {proc['memory_percent']:<8}"
+            rows.append(row)
 
         keywords['values'] = rows
         keywords['name'] = "PROCESS LIST < PID - NAME - STATUS >"

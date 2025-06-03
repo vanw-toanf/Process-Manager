@@ -3,16 +3,15 @@ import os
 import threading
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '.')))
 from _1_auto_run.main_form import MyApplication
-from _1_auto_run.running_process import running_processes
+from _1_auto_run.running_process import start_CRP_threads
 from log.log import Logger
 log = Logger("./app.log") 
 
 def main():
     try:
-        process_thread = threading.Thread(target=running_processes)
-        process_thread.daemon = True  # Thread sẽ dừng khi chương trình chính dừng
+        process_thread = threading.Thread(target=start_CRP_threads)
+        process_thread.daemon = True
         process_thread.start()
-        # Hoặc chạy giao diện chính (tùy bạn muốn cái nào chạy trước)
         app = MyApplication()
         app.run()
         
