@@ -10,7 +10,7 @@ class MenuBox(npyscreen.BoxTitle):
             ]
         Menu_rows = [f"{key:<15}: {val}" for key, val in Menu_data]
         keywords['values'] = Menu_rows
-        keywords['name'] = "SYSTEM RESOURCE"
+        keywords['name'] = "MENU"
         keywords['editable'] = False
         keywords['scroll_exit'] = True
         super().__init__(screen, *args, **keywords)
