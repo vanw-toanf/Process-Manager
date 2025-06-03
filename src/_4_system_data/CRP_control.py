@@ -20,28 +20,28 @@ from datetime import datetime
 '''****************************************************************************
 * Variables, Const
 ****************************************************************************'''
-# Note: For accurate data, functions should be called with an interval of
+# Note: For accurate data, functions should be called with an interval of 
 # at least 1 second.
 
 # [1. Variables for displaying the 'process list']
-list_proc = None  # A list of dictionaries containing process details:
-# Includes: "pid" (Process ID), "name" (Name), "cpu_percent" (CPU usage %),
-# "memory_percent" (Memory usage %), "status" (Current status),
-# "create_time" (Time the process has been running, formatted).
+list_proc = None    # A list of dictionaries containing process details:
+                    # Includes: "pid" (Process ID), "name" (Name), "cpu_percent" (CPU usage %),
+                    # "memory_percent" (Memory usage %), "status" (Current status),
+                    # "create_time" (Time the process has been running, formatted).
 
 leng_proc = 0  # Count of processes in the list
 
-total_core = psutil.cpu_count()  # Total number of CPU cores.
-# Note: "cpu_percent" returns the overall percentage
-# across all cores for a process,
-# so it must be divided by the number of cores to get per-core usage.
+total_core = psutil.cpu_count() # Total number of CPU cores.
+                    # Note: "cpu_percent" returns the overall percentage
+                    # across all cores for a process,
+                    # so it must be divided by the number of cores to get per-core usage.
 
 sort_order = 0  # Sorting order for the process list:
-# 0 = by PID, 1 = by Name, 2 = by %CPU, 3 = by %RAM,
-# 4 = by Status, 5 = by Runtime.
+                # 0 = by PID, 1 = by Name, 2 = by %CPU, 3 = by %RAM,
+                # 4 = by Status, 5 = by Runtime.
 
 # [2. Variables for 'total system resource' statistics]
-total_resource_info = None  # Dictionary to store overall system statistics:
+total_resource_info = None # Dictionary to store overall system statistics:
 # Structure:
 # {
 #     "cpu_percent": CPU usage (%),
@@ -56,7 +56,7 @@ total_resource_info = None  # Dictionary to store overall system statistics:
 # }
 
 #  [3. Variables for handling a specific 'PID's properties]
-PID_object = None  # Reference to a Process object for actions like suspend, resume, terminate, or kill.
+PID_object = None # Reference to a Process object for actions like suspend, resume, terminate, or kill.
 PID_properties = None  # Dictionary to store process properties as string values:
 # Structure:
 # {
@@ -85,8 +85,6 @@ PID_properties = None  # Dictionary to store process properties as string values
 '''****************************************************************************
 * CODE
 ****************************************************************************'''
-
-
 ########## [Functions for process list management]
 def format_elapsed_hhmmss(elapsed_time):
     """Format the elapsed time into hh:mm:ss."""
@@ -94,7 +92,6 @@ def format_elapsed_hhmmss(elapsed_time):
     hours, remainder = divmod(seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
     return f"{hours}:{minutes:02}:{seconds:02}"
-
 
 def sort_by_order():
     '''Sort the process list based on the specified sorting criteria.'''
@@ -114,7 +111,6 @@ def sort_by_order():
     else:
         return  # No action for invalid sort_order
 
-
 def get_list_proc():
     '''
     [Retrieve process information]
@@ -131,7 +127,7 @@ def get_list_proc():
 
     # Get the current time
     now = datetime.now()
-
+    
     # Fetch process data
     for p in psutil.process_iter(["pid", "name", "cpu_percent", "memory_percent", "status", "create_time"]):
         try:
@@ -158,7 +154,6 @@ def get_list_proc():
 
     # Sort the process list based on the current order
     sort_by_order()
-
 
 ############ [Functions for system resource statistics]
 def get_dict_total_resource():
@@ -228,7 +223,7 @@ def get_process_info(pid):
         info["cpu_percent"] = None
         for item in psutil.process_iter(["pid", "cpu_percent"]):
             if item.info["pid"] == pid:
-                info["cpu_percent"] = item.info["cpu_percent"] / total_core
+                info["cpu_percent"] = item.info["cpu_percent"]/total_core
         if info["cpu_percent"] == None:
             return -4
 
@@ -252,14 +247,14 @@ def get_process_info(pid):
             "Command": " ".join(info.get("cmdline", [])) if info.get("cmdline") else "N/A",
             "Executable": str(info.get("exe", "N/A")),
             "CWD": str(info.get("cwd", "N/A")),
-            "MEM_VMS": f"{vms_mb:.2f}",  # MB
-            "MEM_RSS": f"{rss_mb:.2f}",  # MB
-            "MEM_Percent": f"{info.get('memory_percent', 'N/A'):.2f}",  # (%)
+            "MEM_VMS": f"{vms_mb:.2f}",#MB
+            "MEM_RSS": f"{rss_mb:.2f}",#MB
+            "MEM_Percent": f"{info.get('memory_percent', 'N/A'):.2f}",#(%)
             "CPU Num": str(info.get("cpu_num", "N/A")),
-            "CPU Usage": f"{info.get('cpu_percent', 'N/A'):.2f}",  # %
-            "Runtime": runtime_formatted,  # (hh:mm:ss)
-            "User Time": f"{psutil.Process(pid).cpu_times().user:.3f}",  # float second
-            "Sys Time": f"{psutil.Process(pid).cpu_times().system:.3f}",  # float second
+            "CPU Usage": f"{info.get('cpu_percent', 'N/A'):.2f}",#%
+            "Runtime": runtime_formatted,#(hh:mm:ss)
+            "User Time": f"{psutil.Process(pid).cpu_times().user:.3f}",#float second
+            "Sys Time": f"{psutil.Process(pid).cpu_times().system:.3f}",#float second
             "I/O Read Count": str(info["io_counters"].read_count if info.get("io_counters") else "N/A"),
             "I/O Write Count": str(info["io_counters"].write_count if info.get("io_counters") else "N/A"),
             "Open Files Count": str(len(info.get("open_files")) if info.get("open_files") else "N/A"),
@@ -275,5 +270,5 @@ def get_process_info(pid):
     except Exception as e:
         return -4
 
-    # ok
+    #ok 
     return 0
