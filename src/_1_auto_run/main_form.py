@@ -16,10 +16,13 @@ class MainForm(npyscreen.Form):
         try:
             # self.add(ProcessBox, max_height=15)
             self.process_box = self.add(ProcessBox, max_height=15)
-            start_CRP_threads(self.process_box)
             
             self.add(MenuBox, relx=2, rely=18, max_width=int(width * 0.35), max_height=6)
-            self.add(ResourceBox, relx=2+int(width*0.36), rely=18, max_height=6)
+            # self.add(ResourceBox, relx=2+int(width*0.36), rely=18, max_height=6)
+
+            self.resource_box = self.add(ResourceBox, relx=2+int(width*0.36), rely=18, max_height=6)
+            start_CRP_threads(self.process_box, self.resource_box)
+            
         except npyscreen.wgwidget.NotEnoughSpaceForWidget:
             self.process_box = self.add(npyscreen.TitleText, name="Error", value="Not enough space for process list")
         

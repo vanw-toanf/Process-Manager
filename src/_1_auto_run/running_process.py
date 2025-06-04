@@ -19,6 +19,13 @@ def push_CRP_data_to_screen(process_box):
         log.log_info("Updating process data")
         process_box.update_data()
 
+def _push_resource_data(resource_box):
+    while not stop_event.is_set():
+        time.sleep(1)
+        with lock:
+            resource_box.update_data()
+        log.log_info("ResourceBox updated")
+
 def renew_list_processes_data():
     log.log_info("renew_list_processes_data")
     
@@ -29,12 +36,15 @@ def update_total_resource():
     log.log_info("update_list_proc_display")
 
 # Start and stop CRP threads
-def start_CRP_threads(process_box):
+def start_CRP_threads(process_box, resource_box):
     """Start all CRP threads."""
     global CRP_thread1, CRP_thread2, CRP_thread3, CRP_thread4
     stop_event.clear()  # Reset stop event
-    thread = threading.Thread(target=push_CRP_data_to_screen, args=(process_box,) ,daemon=True)
-    thread.start()
+    thread1 = threading.Thread(target=push_CRP_data_to_screen, args=(process_box,) ,daemon=True)
+    thread1.start()
+
+    thread2 = threading.Thread(target=_push_resource_data, args=(resource_box,) ,daemon=True)
+    # thread2.start()
     # CRP_thread1 = threading.Thread(target=push_CRP_data_to_screen, daemon=True)
     # CRP_thread2 = threading.Thread(target=renew_list_processes_data, daemon=True)
     # CRP_thread3 = threading.Thread(target=update_list_proc_display, daemon=True)
