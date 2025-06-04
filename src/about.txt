@@ -1,0 +1,22 @@
+
+=================================================================
+University: Hanoi University of Science and Technology (HUST)
+Note: This is a product for the course ET4291 - Operating Systems
+Team: Team 5, Class 154928, Semester 2024.1
+
+Process Manager
+---------------
+This is a simple process management application for Linux, developed in Python.
+It allows users to view, suspend, resume, and terminate processes via a text-based user interface.
+
+Contributors:
+-------------
+1. Giang Trinh (Role: Project Manager)
+   - Contributions: Lead development for TUI using curses, overall project coordination.
+2. VuongNQ (Lead Developer)
+   - Contributions: Process management using psutil, documentation writing, and system integration.
+3. haidang143 (Documentation Specialist)
+   - Contributions: Supporting documentation for CPU, RAM, and disk usage.
+   
+
+[Press any thing to close]

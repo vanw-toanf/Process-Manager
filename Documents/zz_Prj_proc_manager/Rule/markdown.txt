@@ -1,0 +1,62 @@
+# Quy tắc viết Markdown
+
+## 1. Tiêu đề
+- Sử dụng dấu # để tạo tiêu đề.
+  - Ví dụ:
+    # Tiêu đề cấp 1
+    ## Tiêu đề cấp 2
+
+## 2. Định dạng văn bản
+- **In đậm**: Sử dụng ** hoặc __
+  - Ví dụ: **Đây là văn bản in đậm**
+- *In nghiêng*: Sử dụng * hoặc _
+  - Ví dụ: *Đây là văn bản in nghiêng*
+- ~~Gạch ngang~~: Sử dụng ~~
+  - Ví dụ: ~~Đây là văn bản bị gạch ngang~~
+
+## 3. Danh sách
+- **Danh sách không thứ tự**: Sử dụng *, +, hoặc -
+  - Ví dụ:
+    - Mục 1
+    - Mục 2
+- **Danh sách có thứ tự**: Sử dụng số theo thứ tự
+  - Ví dụ:
+    1. Mục 1
+    2. Mục 2
+
+## 4. Liên kết
+- Tạo liên kết với cú pháp [Tên liên kết](URL)
+  - Ví dụ: [Google](https://www.google.com)
+
+## 5. Hình ảnh
+- Chèn hình ảnh với cú pháp ![Tên hình ảnh](URL)
+  - Ví dụ: ![Hình ảnh mô tả](https://example.com/image.jpg)
+
+## 6. Đoạn mã
+- **Mã một dòng**: Sử dụng dấu ``
+  - Ví dụ: Đây là `mã một dòng`.
+- **Mã nhiều dòng**: Sử dụng ba dấu ```
+  - Ví dụ:
+    ```
+    Đây là đoạn mã nhiều dòng.
+    ```
+
+## 7. Trích dẫn
+- Sử dụng dấu > để tạo trích dẫn.
+  - Ví dụ: > Đây là một đoạn trích dẫn.
+
+## 8. Phân cách
+- Sử dụng ba dấu gạch ngang ---
+  - Ví dụ:
+    ---
+
+## 9. Bảng
+- Tạo bảng bằng cách sử dụng | và -
+  - Ví dụ:
+    | Cột 1 | Cột 2 |
+    |-------|-------|
+    | Dữ liệu 1 | Dữ liệu 2 |
+
+## 10. Nhúng HTML
+- Có thể nhúng mã HTML vào Markdown.
+  - Ví dụ: <p>Đây là một đoạn văn bản sử dụng HTML.</p>

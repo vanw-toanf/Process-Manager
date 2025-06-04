@@ -1,0 +1,13 @@
+Process_manager/
+│
+├── Diagram/               # Gồm các sơ đồ khối, lưu đồ thuật toán
+│
+├── Documents/             # Thư mục chứa tài liệu nhóm đã tìm hiểu
+│
+├── src/                   # Mã nguồn của chương trình
+|
+├── Test_program           # Chương trình để test các chức năng với tiến trình
+|
+├── README.md              # Tài liệu hướng dẫn sử dụng
+|
+└── LICENSE                # GNU ver 3
