@@ -1,6 +1,4 @@
 import npyscreen
-import threading
-import time
 from _4_system_data import CRP_control
 
 class ProcessBox(npyscreen.BoxTitle):
@@ -12,7 +10,7 @@ class ProcessBox(npyscreen.BoxTitle):
         self.scroll_exit = True
         self.slow_scroll = True
         self.update_data()
-        self.start_update_thread()
+        # self.start_update_thread()
 
     def update_data(self):
         CRP_control.get_list_proc()
@@ -24,12 +22,3 @@ class ProcessBox(npyscreen.BoxTitle):
 
         self.entry_widget.values = rows
         self.entry_widget.display()
-
-    def start_update_thread(self):
-        def update_loop():
-            while True:
-                time.sleep(0.5)
-                self.update_data()
-        thread = threading.Thread(target=update_loop)
-        thread.daemon = True  # Đảm bảo luồng dừng khi chương trình kết thúc
-        thread.start()
