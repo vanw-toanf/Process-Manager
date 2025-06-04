@@ -14,14 +14,14 @@ lock = threading.Lock()  # Lock for shared data access
 
 # Thread functions
 def push_CRP_data_to_screen(process_box):
-    while 1:
-        time.sleep(1)
+    while not stop_event.is_set():
+        time.sleep(2)
         log.log_info("Updating process data")
         process_box.update_data()
-
+        
 def _push_resource_data(resource_box):
     while not stop_event.is_set():
-        time.sleep(1)
+        time.sleep(2)
         with lock:
             resource_box.update_data()
         log.log_info("ResourceBox updated")
@@ -44,15 +44,7 @@ def start_CRP_threads(process_box, resource_box):
     thread1.start()
 
     thread2 = threading.Thread(target=_push_resource_data, args=(resource_box,) ,daemon=True)
-    # thread2.start()
-    # CRP_thread1 = threading.Thread(target=push_CRP_data_to_screen, daemon=True)
-    # CRP_thread2 = threading.Thread(target=renew_list_processes_data, daemon=True)
-    # CRP_thread3 = threading.Thread(target=update_list_proc_display, daemon=True)
-    # CRP_thread4 = threading.Thread(target=update_total_resource, daemon=True)
-    # CRP_thread1.start()
-    # CRP_thread2.start()
-    # CRP_thread3.start()
-    # CRP_thread4.start()
+    thread2.start()
 
 def destroy_CRP_threads():
     """Stop and join all CRP threads."""
@@ -62,7 +54,6 @@ def destroy_CRP_threads():
             thread.join(timeout=2.0)  # Wait up to 2 seconds
     log.log_info("Stopped CRP threads")
 
-# Main function to run CRP window
 def CRP_auto_run():
     try:
         while True:
