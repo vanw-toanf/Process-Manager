@@ -3,7 +3,6 @@ from PyQt6.QtWidgets import (QMainWindow, QVBoxLayout, QWidget,
                              QMessageBox, QStatusBar)
 from PyQt6.QtCore import QTimer, Qt
 
-# Import từ các module đã chia nhỏ
 from app.core import system_monitor, process_handler
 from app.ui.system_info_bar import SystemInfoBar
 from app.ui.process_table import ProcessTable

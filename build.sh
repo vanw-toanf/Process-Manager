@@ -2,7 +2,7 @@
 
 # Start
 echo "🚀 Downloading the packages..."
-apt-get update && apt-get install -y\
+apt-get update && apt-get install -y \
     libgl1 \
     libxkbcommon0 \
     libegl1-mesa \
