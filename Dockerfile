@@ -1,8 +1,10 @@
-#!/bin/bash
+FROM python:3.12-slim
 
-# Start
-echo "🚀 Downloading the packages..."
-apt-get update && apt-get install -y\
+WORKDIR /workspace
+
+COPY . .
+
+RUN apt-get update && apt-get install -y\
     libgl1 \
     libxkbcommon0 \
     libegl1-mesa \
@@ -25,15 +27,12 @@ apt-get update && apt-get install -y\
     libxcb-xfixes0 \
     libxcb-xkb1 \
     libxkbcommon-x11-0 \
+    make
 
-pip install -r src/requirements.txt
+ENV QT_QPA_PLATFORM_PLUGIN_PATH=/usr/local/lib/python3.12/site-packages/PyQt6/Qt6/plugins
 
-# Check setting
-if [ $? -ne 0 ]; then
-    echo "❌ Failed. Please check requirements.txt."
-    exit 1
-fi
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r src/requirements.txt
 
-# Notify success
-echo "✅ Sucessed. The app is running..."
-python src/main.py
+RUN chmod +x build.sh
+CMD ["make", "build"]
