@@ -3,87 +3,61 @@ import sys
 import os
 from log.log import Logger
 import time
-import npyscreen
-
+# from _2_display_module.process.process_layout import ProcessBox
 log = Logger(os.path.abspath("app.log"))
 
-class ThreadManager:
-    def __init__(self):
-        self.stop_event = threading.Event()
-        self.lock = threading.Lock()
-        self.threads = []
+def running_processes(process_box):
+    log.log_info("Starting Process Manager Application")
+# Thread control
+stop_event = threading.Event()  # Event to signal threads to stop
+lock = threading.Lock()  # Lock for shared data access
+
+CRP_thread2= None
+CRP_thread1 = None
+# Thread functions
+def push_process_running_data_to_screen(process_box):
+    while not stop_event.is_set():
+        time.sleep(2)
+        log.log_info("Updating process data")
+        process_box.update_data()
         
-    def start_threads(self, process_box, resource_box):
-        """Khởi chạy các thread với cơ chế restart an toàn"""
-        self.stop_event.clear()
-        
-        # Tạo thread mới nếu thread cũ đã dừng hoặc chưa tồn tại
-        if not hasattr(self, 'CRP_thread1') or not self.CRP_thread1.is_alive():
-            self.CRP_thread1 = threading.Thread(
-                target=self.push_process_running_data_to_screen,
-                args=(process_box,),
-                daemon=True
-            )
-            self.CRP_thread1.start()
-            self.threads.append(self.CRP_thread1)
+def push_resource_data(resource_box):
+    while not stop_event.is_set():
+        time.sleep(2)
+        with lock:
+            resource_box.update_data()
+        log.log_info("ResourceBox updated")
 
-        if not hasattr(self, 'CRP_thread2') or not self.CRP_thread2.is_alive():
-            self.CRP_thread2 = threading.Thread(
-                target=self.push_resource_data,
-                args=(resource_box,),
-                daemon=True
-            )
-            self.CRP_thread2.start()
-            self.threads.append(self.CRP_thread2)
+def renew_list_processes_data():
+    log.log_info("renew_list_processes_data")
 
-    def push_process_running_data_to_screen(self, process_box):
-        """Cập nhật dữ liệu tiến trình an toàn"""
-        while not self.stop_event.is_set():
-            try:
-                time.sleep(2)
-                if hasattr(process_box, 'update_data'):
-                    # Sử dụng npyscreen thread-safe để cập nhật UI
-                    npyscreen.async_safe_call(process_box.update_data)
-                    log.log_debug("Process data updated")
-            except Exception as e:
-                log.log_error(f"Error in process update: {str(e)}")
 
-    def push_resource_data(self, resource_box):
-        """Cập nhật dữ liệu tài nguyên an toàn"""
-        while not self.stop_event.is_set():
-            try:
-                time.sleep(2)
-                if hasattr(resource_box, 'update_data'):
-                    with self.lock:
-                        npyscreen.async_safe_call(resource_box.update_data)
-                    log.log_debug("Resource data updated")
-            except Exception as e:
-                log.log_error(f"Error in resource update: {str(e)}")
-
-    def stop_threads(self, wait_timeout=1.0):
-        """Dừng các thread một cách an toàn"""
-        self.stop_event.set()
-        
-        for thread in self.threads:
-            if thread and thread.is_alive():
-                thread.join(wait_timeout)
-                
-        self.threads = []
-        log.log_info("All threads stopped")
-
-# Sử dụng singleton pattern để quản lý thread
-thread_manager = ThreadManager()
-
+# Start and stop CRP threads
 def start_CRP_threads(process_box, resource_box):
-    thread_manager.start_threads(process_box, resource_box)
+    global CRP_thread1, CRP_thread2, stop_event
+    stop_event.clear()  # Reset stop event
+    CRP_thread1 = threading.Thread(target=push_process_running_data_to_screen, args=(process_box,), daemon=True)
+    CRP_thread1.start()
+
+    CRP_thread2 = threading.Thread(target=push_resource_data, args=(resource_box,), daemon=True)
+    CRP_thread2.start()
 
 def destroy_CRP_threads():
-    thread_manager.stop_threads()
+    """Stop and join all CRP threads."""
+    stop_event.set()  # Signal threads to stop
+    for thread in [CRP_thread1, CRP_thread2]:
+        if thread and thread.is_alive():
+            thread.join(timeout=2.0)  # Wait up to 2 seconds
+    log.log_info("Stopped CRP threads")
 
 def CRP_auto_run(process_box, resource_box):
     try:
-        start_CRP_threads(process_box, resource_box)
-        log.log_info("CRP threads started successfully")
+        while True:
+            log.log_info("Initialized CRP window")
+            start_CRP_threads(process_box, resource_box)
+            log.log_info("Closed CRP window")
+
     except Exception as e:
-        log.log_error(f"CRP initialization failed: {str(e)}")
+        log.log_error(f"Error in CRP_auto_run")
         destroy_CRP_threads()
+        return -1
