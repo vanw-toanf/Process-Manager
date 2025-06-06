@@ -32,7 +32,6 @@ class ProcessBox(npyscreen.BoxTitle):
         selected_string = self.entry_widget.values[self.entry_widget.cursor_line]
         
         try:
-            # destroy_CRP_threads()
             pid = int(selected_string.strip().split()[0])
             second_form = self.parent.parentApp.getForm('SECOND')
             second_form.process_box.set_pid(pid)
