@@ -9,8 +9,6 @@ from _2_display_module.process.process_detail_layout import AutoUpdateProcessBox
 
 from _1_auto_run.running_process import start_CRP_threads, destroy_CRP_threads
 from _4_system_data import CRP_control
-import threading
-import time
 class MainForm(npyscreen.Form):
     OK_BUTTON_TEXT = "Exit"
     def create(self):
@@ -46,11 +44,11 @@ class MainForm(npyscreen.Form):
 
     def on_ok(self):
         destroy_CRP_threads()
-        self.parentApp.setNextForm(None)  # thoát chương trình
+        self.parentApp.setNextForm(None)
         self.editing = False
 
 class MyApplication(npyscreen.NPSAppManaged):
-   def onStart(self):
+    def onStart(self):
        self.addForm('MAIN', MainForm, name='PROCESS MANAGER SYSTEM')
        self.addForm('SECOND', ProcessMonitorForm, name='SECOND FORM')
 
