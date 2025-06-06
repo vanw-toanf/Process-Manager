@@ -3,7 +3,7 @@ import sys
 import os
 from log.log import Logger
 import time
-from _2_display_module.process.process_layout import ProcessBox
+# from _2_display_module.process.process_layout import ProcessBox
 log = Logger(os.path.abspath("app.log"))
 
 def running_processes(process_box):
@@ -59,5 +59,5 @@ def CRP_auto_run(process_box, resource_box):
 
     except Exception as e:
         log.log_error(f"Error in CRP_auto_run")
-        destroy_CRP_threads()  # Ensure threads are stopped on error
+        destroy_CRP_threads()
         return -1
