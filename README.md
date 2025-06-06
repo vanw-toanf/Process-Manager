@@ -1,6 +1,8 @@
 # Process-Manager
 This project simulates the task manager like in windows on ubuntu.
 
+To run this app you must be in terminal window!
+
 ```bash
 git clone https://github.com/vanw-toanf/Process-Manager
 cd Process-Manger

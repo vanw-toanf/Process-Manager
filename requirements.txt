@@ -1,0 +1,2 @@
+psutil==7.0.0
+npyscreen==4.10.5
