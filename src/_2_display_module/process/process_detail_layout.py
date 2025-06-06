@@ -1,62 +1,7 @@
 import npyscreen
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from _2_display_module.resource.resource_layout import ResourceBox
-from _2_display_module.menu.menu_layout import MenuBox
-from _2_display_module.process.process_layout import ProcessBox
-from _1_auto_run.running_process import start_CRP_threads, destroy_CRP_threads
-from _4_system_data import CRP_control
 import threading
 import time
-class MainForm(npyscreen.Form):
-    OK_BUTTON_TEXT = "Exit"
-    def create(self):
-        height, width = self.lines, self.columns
-        self.welcome = self.add(npyscreen.TitleText, name="Welcome", value="This is Process Manager App", editable=False)
-        
-        try:
-            # self.add(ProcessBox, max_height=15)
-            self.process_box = self.add(ProcessBox, max_height=15)
-            
-            self.add(MenuBox, relx=2, rely=18, max_width=int(width * 0.35), max_height=6)
-            self.resource_box = self.add(ResourceBox, relx=2+int(width*0.36), rely=18, max_height=6)
-            start_CRP_threads(self.process_box, self.resource_box)
-            
-        except npyscreen.wgwidget.NotEnoughSpaceForWidget:
-            self.process_box = self.add(npyscreen.TitleText, name="Error", value="Not enough space for process list")
-        
-        self.next_form = None
-        self.add(npyscreen.ButtonPress, name="Go to Second Form", when_pressed_function=self.go_to_second_form)
-
-    def beforeEditing(self):
-        start_CRP_threads(self.process_box, self.resource_box)
-    def go_to_second_form(self):
-        self.next_form = 'SECOND'
-        self.editing = False
-    def afterEditing(self):
-        destroy_CRP_threads()
-        if self.next_form:
-            self.parentApp.setNextForm(self.next_form)
-        else:
-            self.parentApp.setNextForm(None)
-
-    def on_ok(self):
-        destroy_CRP_threads()
-        self.parentApp.setNextForm(None)  # thoát chương trình
-        self.editing = False
-# class SecondForm(npyscreen.Form):
-#     OK_BUTTON_TEXT = "Back"
-#     def create(self):
-#         self.add(npyscreen.TitleText, name="Second Form", value="This is the Second Form", editable=False)
-#         self.add(npyscreen.TitleText, name="Sample", value="Hello from Second Form!")
-#         self.add(npyscreen.ButtonPress, name="Back to Main Form", when_pressed_function=self.switch_to_main_form)
-    
-#     def switch_to_main_form(self):
-#         self.parentApp.switchForm('MAIN')
-
-#     def afterEditing(self):
-#         self.parentApp.switchForm('MAIN')
+from _4_system_data import CRP_control
 
 class AutoUpdateProcessBox(npyscreen.BoxTitle):
     _contained_widget = npyscreen.MultiLine
@@ -131,7 +76,6 @@ class AutoUpdateProcessBox(npyscreen.BoxTitle):
             self.entry_widget.display()
 
 class ProcessMonitorForm(npyscreen.Form):
-    
     def create(self):
         y, x = self.useable_space()
         
@@ -180,12 +124,12 @@ class ProcessMonitorForm(npyscreen.Form):
 
     def on_exit(self):
         self.process_box._stop_auto_update()
-        self.parentApp.switchForm('MAIN')
+        self.parentApp.switchForm(None)
 
-class MyApplication(npyscreen.NPSAppManaged):
-   def onStart(self):
-       self.addForm('MAIN', MainForm, name='PROCESS MANAGER SYSTEM')
-       self.addForm('SECOND', ProcessMonitorForm, name='SECOND FORM')
+class AutoUpdateProcessApp(npyscreen.NPSAppManaged):
+    def onStart(self):
+        self.addForm("MAIN", ProcessMonitorForm, name="Auto-Update Process Monitor")
 
-if __name__ == '__main__':
-   TestApp = MyApplication().run()
+if __name__ == "__main__":
+    app = AutoUpdateProcessApp()
+    app.run()

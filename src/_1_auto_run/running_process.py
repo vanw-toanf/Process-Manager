@@ -12,14 +12,16 @@ def running_processes(process_box):
 stop_event = threading.Event()  # Event to signal threads to stop
 lock = threading.Lock()  # Lock for shared data access
 
+CRP_thread2= None
+CRP_thread1 = None
 # Thread functions
-def push_CRP_data_to_screen(process_box):
+def push_process_running_data_to_screen(process_box):
     while not stop_event.is_set():
         time.sleep(2)
         log.log_info("Updating process data")
         process_box.update_data()
         
-def _push_resource_data(resource_box):
+def push_resource_data(resource_box):
     while not stop_event.is_set():
         time.sleep(2)
         with lock:
@@ -28,41 +30,31 @@ def _push_resource_data(resource_box):
 
 def renew_list_processes_data():
     log.log_info("renew_list_processes_data")
-    
-def update_list_proc_display():
-    log.log_info("update_list_proc_display")
 
-def update_total_resource():
-    log.log_info("update_list_proc_display")
 
 # Start and stop CRP threads
 def start_CRP_threads(process_box, resource_box):
-    """Start all CRP threads."""
-    global CRP_thread1, CRP_thread2, CRP_thread3, CRP_thread4
+    global CRP_thread1, CRP_thread2, stop_event
     stop_event.clear()  # Reset stop event
-    thread1 = threading.Thread(target=push_CRP_data_to_screen, args=(process_box,) ,daemon=True)
-    thread1.start()
+    CRP_thread1 = threading.Thread(target=push_process_running_data_to_screen, args=(process_box,), daemon=True)
+    CRP_thread1.start()
 
-    thread2 = threading.Thread(target=_push_resource_data, args=(resource_box,) ,daemon=True)
-    thread2.start()
+    CRP_thread2 = threading.Thread(target=push_resource_data, args=(resource_box,), daemon=True)
+    CRP_thread2.start()
 
 def destroy_CRP_threads():
     """Stop and join all CRP threads."""
     stop_event.set()  # Signal threads to stop
-    for thread in [CRP_thread1, CRP_thread2, CRP_thread3, CRP_thread4]:
+    for thread in [CRP_thread1, CRP_thread2]:
         if thread and thread.is_alive():
             thread.join(timeout=2.0)  # Wait up to 2 seconds
     log.log_info("Stopped CRP threads")
 
-def CRP_auto_run():
+def CRP_auto_run(process_box, resource_box):
     try:
         while True:
             log.log_info("Initialized CRP window")
-
-            start_CRP_threads()
-
-            destroy_CRP_threads()
-
+            start_CRP_threads(process_box, resource_box)
             log.log_info("Closed CRP window")
 
     except Exception as e:

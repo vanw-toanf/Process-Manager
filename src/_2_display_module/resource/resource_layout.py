@@ -1,5 +1,5 @@
 import npyscreen
-from _4_system_data import CRP_control      # nơi có get_dict_total_resource
+from _4_system_data import CRP_control
 
 class ResourceBox(npyscreen.BoxTitle):
     _contained_widget = npyscreen.MultiLine
@@ -9,12 +9,10 @@ class ResourceBox(npyscreen.BoxTitle):
         self.name = "SYSTEM RESOURCE"
         self.editable = False
         self.scroll_exit = True
-        self.update_data()                  # lần đầu
-
-    # gọi hàm thống kê & vẽ lại UI
+        self.update_data()
     def update_data(self):
         CRP_control.get_dict_total_resource()
-        info = CRP_control.total_resource_info      # dict đã chuẩn hoá sẵn
+        info = CRP_control.total_resource_info
 
         rows = [
             f"CPU Usage      : {info['cpu_percent']:.1f} %",

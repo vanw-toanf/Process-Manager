@@ -10,7 +10,6 @@ class ProcessBox(npyscreen.BoxTitle):
         self.scroll_exit = True
         self.slow_scroll = True
         self.update_data()
-        # self.start_update_thread()
 
     def update_data(self):
         CRP_control.get_list_proc()
