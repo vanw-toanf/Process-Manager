@@ -19,3 +19,4 @@ sudo docker run -it --rm \
   -e QT_QPA_PLATFORM_PLUGIN_PATH=$(find /usr -type d -name platforms | sed 's:/platforms$::') \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
   <image_name>
+  ```

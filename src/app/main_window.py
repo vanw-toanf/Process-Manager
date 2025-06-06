@@ -12,7 +12,7 @@ class TaskManagerApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Ubuntu Task Manager (Ctrl+H to view guide)")
-        self.setGeometry(100, 100, 900, 700)
+        self.setGeometry(100, 100, 1110, 700)
 
         # --- Menu Bar ---
         self._setup_menu()

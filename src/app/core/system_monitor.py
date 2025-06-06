@@ -9,7 +9,8 @@ def get_cpu_usage():
 
 def get_memory_info():
     """
-    Get info RAM (total, used, percent).
+    Get info RAM. \\
+    Return (total, used, percent).
     """
     mem = psutil.virtual_memory()
     return {
@@ -20,9 +21,10 @@ def get_memory_info():
 
 def get_swap_info():
     """
-    Get info Swap (total, used, percent).
+    Get info Swap. \\
+    Return (total, used, percent).
     """
-    swap = psutil.swap_memory()
+    swap = psutil.swap_memory() 
     if swap.total == 0:
         return None 
     return {
