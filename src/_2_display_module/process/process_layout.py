@@ -2,7 +2,8 @@ import npyscreen
 from _4_system_data import CRP_control
 
 class ProcessBox(npyscreen.BoxTitle):
-    _contained_widget = npyscreen.MultiLine
+    _contained_widget = npyscreen.MultiLineAction
+
     def __init__(self, screen, *args, **keywords):
         super().__init__(screen, *args, **keywords)
         self.name = "PROCESS LIST < PID - NAME - STATUS - CPU - MEMORY >"

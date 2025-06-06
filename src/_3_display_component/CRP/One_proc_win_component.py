@@ -1,24 +1,3 @@
-"""
-One_proc_win_component.py
-
-This module defines the 'OneProcWin class', a subclass of the Container class.
-'OneProcWin class' class provides methods to retrieve information about 
-a specific process and manage it through actions such as:
-suspending, resuming, terminating, and killing the process.
-
-The class uses functions implemented in CRP_control.py library
-to collect process details and perform management operations.
-
-Copyright (C) 2024  Giang Trinh.
-
-This file is part of the Process Manager project and is licensed
-under the GNU General Public License v3 or later.
-"""
-
-
-'''****************************************************************************
-* Definitions
-****************************************************************************'''
 import curses
 from _3_display_component.container_class.container import Container
 from _4_system_data import CRP_control

@@ -68,18 +68,17 @@ class AutoUpdateProcessBox(npyscreen.BoxTitle):
                 ]
                 self.entry_widget.values = rows
             
-            # Thread-safe display update
             if hasattr(self, 'entry_widget'):
                 self.entry_widget.display()
         except Exception as e:
             self.entry_widget.values = [f"Update error: {str(e)}"]
             self.entry_widget.display()
 
+
 class ProcessMonitorForm(npyscreen.Form):
     def create(self):
         y, x = self.useable_space()
-        
-        # PID Input
+
         self.pid_input = self.add(
             npyscreen.TitleText,
             rely=2,
@@ -87,17 +86,15 @@ class ProcessMonitorForm(npyscreen.Form):
             name="Enter PID:",
             use_two_lines=False
         )
-        
-        # Auto-updating Process Info
+
         self.process_box = self.add(
             AutoUpdateProcessBox,
             rely=5,
             relx=2,
             max_height=12,
-            max_width=x-4
+            max_width=x - 4
         )
-        
-        # Control Buttons
+
         self.add_btn = self.add(
             npyscreen.ButtonPress,
             rely=19,
@@ -105,7 +102,7 @@ class ProcessMonitorForm(npyscreen.Form):
             name="Set PID",
             when_pressed_function=self.on_set_pid
         )
-        
+
         self.exit_btn = self.add(
             npyscreen.ButtonPress,
             rely=19,
@@ -124,12 +121,4 @@ class ProcessMonitorForm(npyscreen.Form):
 
     def on_exit(self):
         self.process_box._stop_auto_update()
-        self.parentApp.switchForm(None)
-
-class AutoUpdateProcessApp(npyscreen.NPSAppManaged):
-    def onStart(self):
-        self.addForm("MAIN", ProcessMonitorForm, name="Auto-Update Process Monitor")
-
-if __name__ == "__main__":
-    app = AutoUpdateProcessApp()
-    app.run()
+        self.parentApp.switchForm('MAIN')
