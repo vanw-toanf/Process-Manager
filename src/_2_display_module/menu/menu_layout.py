@@ -1,0 +1,14 @@
+import npyscreen
+
+class MenuBox(npyscreen.BoxTitle):
+    def __init__(self, screen, *args, **keywords):
+        Menu_data = [
+                ["Q", "Terminate"],
+                ["M", "More infor"]
+            ]
+        Menu_rows = [f"{key:<15}: {val}" for key, val in Menu_data]
+        keywords['values'] = Menu_rows
+        keywords['name'] = "MENU"
+        keywords['editable'] = False
+        keywords['scroll_exit'] = True
+        super().__init__(screen, *args, **keywords)

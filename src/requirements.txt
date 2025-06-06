@@ -1,2 +1,0 @@
-psutil==7.0.0
-PyQt6
