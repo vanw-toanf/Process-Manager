@@ -71,13 +71,3 @@ def destroy_CRP_threads():
     except Exception as e:
         log.log_error(f"Lỗi hủy threads: {str(e)}")
 
-
-def CRP_auto_run(process_box, resource_box):
-    # log.log_info("CRP_auto_run called - this function might conflict with direct thread management in forms.")
-    try:
-        while True:
-            time.sleep(1) 
-    except Exception as e:
-        log.log_error(f"Error in CRP_auto_run: {e}")
-        destroy_CRP_threads()
-        return -1
