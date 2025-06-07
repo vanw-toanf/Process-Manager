@@ -20,7 +20,7 @@ def push_process_running_data_to_screen(process_box):
     while not stop_event.is_set():
         is_paused.wait()
         time.sleep(2)
-        log.log_info("Updating process data")
+        # log.log_info("Updating process data")
         process_box.update_data()
 
 def push_resource_data(resource_box):
@@ -29,7 +29,7 @@ def push_resource_data(resource_box):
         time.sleep(2)
         with lock:
             resource_box.update_data()
-        log.log_info("ResourceBox updated")
+        # log.log_info("ResourceBox updated")
         
 # start and stop crp threads
 def start_CRP_threads(process_box, resource_box):
@@ -41,20 +41,20 @@ def start_CRP_threads(process_box, resource_box):
     if CRP_thread1 is None or not CRP_thread1.is_alive():
         CRP_thread1 = threading.Thread(target=push_process_running_data_to_screen, args=(process_box,), daemon=True)
         CRP_thread1.start()
-        log.log_info("CRP_thread1 started.")
+        # log.log_info("CRP_thread1 started.")
 
     if CRP_thread2 is None or not CRP_thread2.is_alive():
         CRP_thread2 = threading.Thread(target=push_resource_data, args=(resource_box,), daemon=True)
         CRP_thread2.start()
-        log.log_info("CRP_thread2 started.")
+        # log.log_info("CRP_thread2 started.")
 
 def pause_CRP_threads():
     is_paused.clear()  #dừng lại
-    log.log_info("CRP threads paused")
+    # log.log_info("CRP threads paused")
 
 def resume_CRP_threads():
     is_paused.set()  # cho phep chay
-    log.log_info("CRP threads resumed")
+    # log.log_info("CRP threads resumed")
     
 def destroy_CRP_threads():
     """Chỉ gọi khi thoát ứng dụng"""
@@ -73,7 +73,7 @@ def destroy_CRP_threads():
 
 
 def CRP_auto_run(process_box, resource_box):
-    log.log_info("CRP_auto_run called - this function might conflict with direct thread management in forms.")
+    # log.log_info("CRP_auto_run called - this function might conflict with direct thread management in forms.")
     try:
         while True:
             time.sleep(1) 

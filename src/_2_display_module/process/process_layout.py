@@ -5,7 +5,6 @@ import os
 from log.log import Logger
 log = Logger(os.path.abspath("app.log"))
 
-import curses
 class ProcessBox(npyscreen.BoxTitle):
     _contained_widget = npyscreen.MultiLine
     def __init__(self, screen, *args, **keywords):
@@ -39,7 +38,7 @@ class ProcessBox(npyscreen.BoxTitle):
         try:
             selected_string = self.entry_widget.values[self.entry_widget.cursor_line]
             pid = int(selected_string.strip().split()[0])
-            log.log_info(f"PID selected: {pid}")
+            # log.log_info(f"PID selected: {pid}")
 
             #gọi callback nếu có
             if hasattr(self.parent, 'on_process_selected'):
@@ -49,6 +48,6 @@ class ProcessBox(npyscreen.BoxTitle):
             if hasattr(self.parent, 'editing'):
                 self.parent.editing = False
         except (IndexError, ValueError):
-            npyscreen.notify_wait("Cannot get PID from line selected.", title="Error")
+            log.log_error("Cannot get PID from selected line")
             
     

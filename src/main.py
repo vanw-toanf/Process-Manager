@@ -9,9 +9,6 @@ log = Logger("./app.log")
 
 def main():
     try:
-        # process_thread = threading.Thread(target=start_CRP_threads)
-        # process_thread.daemon = True
-        # process_thread.start()
         app = MyApplication()
         app.run()
         

@@ -23,7 +23,7 @@ class AutoUpdateProcessBox(npyscreen.BoxTitle):
         self.lock = threading.Lock()
 
     def set_pid(self, pid):
-        log.log_info(f"Setting PID in detail form: {pid}")
+        # log.log_info(f"Setting PID in detail form: {pid}")
         with self.lock:
             self.pid = pid
             if pid is not None:
@@ -84,7 +84,7 @@ class AutoUpdateProcessBox(npyscreen.BoxTitle):
 
 class ProcessMonitorForm(npyscreen.ActionFormMinimal):
     def create(self):
-        log.log_info("SECOND form create() called")
+        # log.log_info("SECOND form create() called")
         y, x = self.useable_space()
         self.add(npyscreen.FixedText, value="=== INFORMATION ===", rely=1, relx=2, editable=False)
         
@@ -174,12 +174,12 @@ class ProcessMonitorForm(npyscreen.ActionFormMinimal):
             stdscr = curses.initscr()
             stdscr.clear()
             stdscr.refresh()
-            log.log_info("Forced screen redraw from Form 2")
+            # log.log_info("Forced screen redraw from Form 2")
         except Exception as e:
             log.log_error(f"Screen redraw failed: {e}")
        
     def beforeEditing(self):
-        log.log_info("SECOND Form is now active")
+        # log.log_info("SECOND Form is now active")
         self.display()
 
 class AutoUpdateProcessApp(npyscreen.NPSAppManaged):

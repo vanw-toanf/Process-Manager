@@ -20,7 +20,7 @@ class MainForm(npyscreen.Form):
         self._selected_pid = None
         self.next_form = None
         height, width = self.useable_space()
-        log.log_info(f"Terminal size: {width}x{height}")
+        # log.log_info(f"Terminal size: {width}x{height}")
 
         min_height, min_width = 24, 80
 
@@ -79,10 +79,10 @@ class MainForm(npyscreen.Form):
             second_form = self.parentApp.getForm('SECOND')
             second_form.process_box.set_pid(self._selected_pid)
             self.parentApp.setNextForm('SECOND')
-            log.log_info("MainForm.afterEditing() -> SECOND")
+            # log.log_info("MainForm.afterEditing() -> SECOND")
         else:
             self.parentApp.setNextForm(None)
-            log.log_info("MainForm.afterEditing() -> Exit")
+            # log.log_info("MainForm.afterEditing() -> Exit")
     def on_ok(self):
         destroy_CRP_threads()
         self._exit_to_second = False
@@ -90,7 +90,7 @@ class MainForm(npyscreen.Form):
         self.editing = False
     
     def on_process_selected(self, pid):
-        log.log_info(f"MainForm.on_process_selected({pid}) called")
+        # log.log_info(f"MainForm.on_process_selected({pid}) called")
         self.process_box.is_visible = False
         self.resource_box.is_visible = False
         pause_CRP_threads()
@@ -100,7 +100,7 @@ class MainForm(npyscreen.Form):
 
     def while_waiting(self):
         if self._exit_to_second:
-            log.log_info("MainForm.while_waiting(): exiting to SECOND")
+            # log.log_info("MainForm.while_waiting(): exiting to SECOND")
             self.editing = False
             self.display()
 
@@ -110,7 +110,7 @@ class MyApplication(npyscreen.NPSAppManaged):
        self.addForm('SECOND', ProcessMonitorForm)
     def onExit(self):
         destroy_CRP_threads()
-        log.log_info("Ứng dụng đang thoát...", extra={'single': True})
+        # log.log_info("Ứng dụng đang thoát...", extra={'single': True})
         return super().onExit()
 
 if __name__ == '__main__':
