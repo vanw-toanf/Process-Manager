@@ -84,13 +84,6 @@ def sort_by_order():
         return  # No action for invalid sort_order
 
 def get_list_proc():
-    '''
-    [Retrieve process information]
-    Observations indicate that using psutil.process_iter.cache_clear() as suggested at
-    https://psutil.readthedocs.io/en/latest/ results in 0% CPU usage being reported.
-    This is because CPU usage calculations depend on previously retrieved data.
-    Require: this function should run after at least 100ms (not < 100ms)
-    '''
     global list_proc
     global leng_proc
 
@@ -196,10 +189,7 @@ def get_process_info(pid):
             "cpu_num", "create_time",
             "num_threads", "io_counters", "open_files"
         ])
-        # because of "cpu_percent" of Process object can't save to calculate next time
-        # so we will using "process_iter" to get cpu_percent of this PID
-        # the first value maybe 0% but it no problem.
-        # read more at: https://psutil.readthedocs.io/en/latest/#processes
+
         info["cpu_percent"] = None
         for item in psutil.process_iter(["pid", "cpu_percent"]):
             if item.info["pid"] == pid:
