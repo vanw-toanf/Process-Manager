@@ -150,18 +150,12 @@ class ProcessMonitorForm(npyscreen.ActionFormMinimal):
     def on_terminate(self):
         pid = self.process_box.pid
         if pid is None:
-            npyscreen.notify_confirm("None PID to terminate!", title="Error")
-            curses.flushinp()
-            return
-
-        if not npyscreen.notify_yes_no(f"Are you sure terminate PID {pid}?", title="Confirm", editw=1):
-            curses.flushinp()
+            self.process_box.entry_widget.values = ["None PID to terminate!"]
+            self.process_box.entry_widget.display()
             return
         
         #gọi backend terminate
         success, msg = CRP_control.terminate_process_by_pid(pid)
-        title = "Success" if success else "Error"
-        npyscreen.notify_confirm(msg, title=title)
         curses.flushinp()
 
         if success:

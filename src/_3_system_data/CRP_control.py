@@ -135,7 +135,7 @@ def get_list_proc():
     # Sort the process list based on the current order
     sort_by_order()
 
-############ [Functions for system resource statistics]
+#Functions for system resource statistics
 def get_dict_total_resource():
     '''Collect and organize total system resource statistics.'''
     global total_resource_info
