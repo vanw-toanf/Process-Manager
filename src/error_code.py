@@ -1,14 +1,3 @@
-"""
-File: error_code.py
-Description: This file defines an enumeration class `CommonErrorCode`
-that contains common error codes used in the Process Manager project.
-
-Copyright (C) 2024  Giang Trinh, VuongNQ, and the development team.
-
-This file is part of the Process Manager project and is licensed
-under the GNU General Public License v3 or later.
-"""
-
 from enum import Enum
 
 class CommonErrorCode(Enum):

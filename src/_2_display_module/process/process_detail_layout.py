@@ -150,29 +150,28 @@ class ProcessMonitorForm(npyscreen.ActionFormMinimal):
     def on_terminate(self):
         pid = self.process_box.pid
         if pid is None:
-            npyscreen.notify_confirm("Chưa có PID để terminate!", title="Error")
+            npyscreen.notify_confirm("None PID to terminate!", title="Error")
             curses.flushinp()
             return
 
-        # Xác nhận
-        if not npyscreen.notify_yes_no(f"Bạn có chắc muốn terminate PID {pid}?", title="Confirm", editw=1):
+        if not npyscreen.notify_yes_no(f"Are you sure terminate PID {pid}?", title="Confirm", editw=1):
             curses.flushinp()
             return
         
-        # Gọi backend terminate
+        #gọi backend terminate
         success, msg = CRP_control.terminate_process_by_pid(pid)
         title = "Success" if success else "Error"
         npyscreen.notify_confirm(msg, title=title)
         curses.flushinp()
 
         if success:
-            # Nếu terminate thành công, dừng update, resume threads, quay về MainForm
+            #nếu terminate thành công, dừng update, resume threads, quay về form1
             self.process_box._stop_auto_update()
             resume_CRP_threads()
             self.parentApp.setNextForm('MAIN')
             self.editing = False
         else:
-            # Nếu thất bại, ở lại Form 2 và vẫn auto-update
+            # nếu thất bại, ở lại form2 và vẫn auto-update
             self.process_box.entry_widget.values = [msg]
             self.process_box.entry_widget.display()
             

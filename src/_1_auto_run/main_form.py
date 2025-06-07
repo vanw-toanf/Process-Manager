@@ -11,6 +11,7 @@ from _1_auto_run.running_process import start_CRP_threads, destroy_CRP_threads, 
 from _3_system_data import CRP_control
 from log.log import Logger
 log = Logger(os.path.abspath("app.log"))
+
 class MainForm(npyscreen.Form):
     OK_BUTTON_TEXT = "Exit"
     
@@ -23,20 +24,18 @@ class MainForm(npyscreen.Form):
 
         min_height, min_width = 24, 80
 
-        # Kiểm tra kích thước terminal
         if height < min_height or width < min_width:
             warning = (
-                f"⚠️ Terminal quá nhỏ ({width}x{height}).\n"
-                f"Cần ít nhất {min_width}x{min_height} để hiển thị đầy đủ.\n"
-                f"Vui lòng mở rộng terminal rồi chạy lại."
+                f"⚠️ Terminal too small ({width}x{height}).\n"
+                f"Need min {min_width}x{min_height} to show.\n"
+                f"Please extend terminal and rerun."
             )
-            self.add(npyscreen.TitleFixedText, name="CẢNH BÁO", value=warning)
-            self.disable_form = True  #  Cờ để tránh xử lý widget tiếp theo
+            self.add(npyscreen.TitleFixedText, name="Warning", value=warning)
+            self.disable_form = True  #Cờ để tránh xử lý widget tiếp theo
             return
         else:
             self.disable_form = False
 
-        # Giao diện chính
         self.welcome = self.add(npyscreen.TitleText, name="Welcome", value="This is Process Manager App", editable=False)
 
         try:
@@ -51,7 +50,6 @@ class MainForm(npyscreen.Form):
         except npyscreen.wgwidget.NotEnoughSpaceForWidget:
             self.process_box = self.add(npyscreen.TitleText, name="Error", value="Not enough space for process list")
 
-        # Nút chuyển form
         self.add(npyscreen.ButtonPress, name="Go to Second Form", when_pressed_function=self.go_to_second_form)
 
     def beforeEditing(self):
@@ -59,7 +57,7 @@ class MainForm(npyscreen.Form):
             return
         self.process_box.is_visible = True
         self.resource_box.is_visible = True
-        self._exit_to_second = False   # Reset lại để không tự động sang form 2
+        self._exit_to_second = False   #reset lại để không tự động sang form 2
         self.process_box.update_data()
         resume_CRP_threads()
         try:
@@ -67,7 +65,6 @@ class MainForm(npyscreen.Form):
         except AttributeError:
             pass
 
-        # 4) Ép NPyscreen redraw toàn bộ form
         self.display()
         
     def go_to_second_form(self):

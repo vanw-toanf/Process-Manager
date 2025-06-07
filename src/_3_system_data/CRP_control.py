@@ -1,13 +1,6 @@
 import psutil
 from datetime import datetime
 
-'''****************************************************************************
-* Variables, Const
-****************************************************************************'''
-# Note: For accurate data, functions should be called with an interval of 
-# at least 1 second.
-
-# [1. Variables for displaying the 'process list']
 list_proc = None    # A list of dictionaries containing process details:
                     # Includes: "pid" (Process ID), "name" (Name), "cpu_percent" (CPU usage %),
                     # "memory_percent" (Memory usage %), "status" (Current status),
@@ -24,7 +17,6 @@ sort_order = 0  # Sorting order for the process list:
                 # 0 = by PID, 1 = by Name, 2 = by %CPU, 3 = by %RAM,
                 # 4 = by Status, 5 = by Runtime.
 
-# [2. Variables for 'total system resource' statistics]
 total_resource_info = None # Dictionary to store overall system statistics:
 # Structure:
 # {
@@ -39,7 +31,6 @@ total_resource_info = None # Dictionary to store overall system statistics:
 #     "zombie": Count of zombie processes,
 # }
 
-#  [3. Variables for handling a specific 'PID's properties]
 PID_object = None # Reference to a Process object for actions like suspend, resume, terminate, or kill.
 PID_properties = None  # Dictionary to store process properties as string values:
 # Structure:
@@ -66,10 +57,7 @@ PID_properties = None  # Dictionary to store process properties as string values
 #     "Number of Threads": Number of threads in the process (int)
 # }
 
-'''****************************************************************************
-* CODE
-****************************************************************************'''
-########## [Functions for process list management]
+#Functions for process list management
 def format_elapsed_hhmmss(elapsed_time):
     """Format the elapsed time into hh:mm:ss."""
     seconds = int(elapsed_time.total_seconds())
@@ -117,6 +105,14 @@ def get_list_proc():
         try:
             # Format each process's information
             proc_info = p.info
+            #sample p_info:
+            # # {
+            #     'pid': 1234,
+            #     'name': 'python',
+            #     'username': 'vanwtoanf',
+            #     'create_time': 1717645910.123,
+            #     'memory_info': pmem(rss=24805376, vms=78675968, shared=983040, text=4096, lib=0, data=12369920, dirty=0)
+            #   }
             proc_info["cpu_percent"] = proc_info["cpu_percent"] / total_core
             proc_info["cpu_percent"] = f"{proc_info['cpu_percent']:.1f}%"  # Format CPU usage
             proc_info["memory_percent"] = f"{proc_info['memory_percent']:.1f}%"  # Format RAM usage
@@ -263,8 +259,8 @@ def terminate_process_by_pid(pid):
     Return (True, "Success message") or (False, "Error message").
     """
     try:
-        proc = psutil.Process(pid) # Return name, status, cpu_percent, memory_info, num_threads, create_time of process {pid}.
-        proc.terminate() # Send SIGTERM signal to the process.
+        proc = psutil.Process(pid) #return name, status, cpu_percent, memory_info, num_threads, create_time of process {pid}.
+        proc.terminate() #send SIGTERM signal to the process.
         return True, f"The request to terminate the process (PID: {pid}) has been sent."
     except psutil.NoSuchProcess:
         return False, f"Process PID {pid} no longer exit."

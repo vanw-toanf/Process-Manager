@@ -19,7 +19,7 @@ class ProcessBox(npyscreen.BoxTitle):
         self.entry_widget.add_handlers({
             ord('m'): self.handle_selection,
         })
-        self.next_form = 'SECOND'  # Default next form
+        self.next_form = 'SECOND'  #next form
 
     def update_data(self):
         if not getattr(self, "is_visible", True):
@@ -41,7 +41,7 @@ class ProcessBox(npyscreen.BoxTitle):
             pid = int(selected_string.strip().split()[0])
             log.log_info(f"PID selected: {pid}")
 
-            # Gọi callback nếu có
+            #gọi callback nếu có
             if hasattr(self.parent, 'on_process_selected'):
                 self.parent.on_process_selected(pid)
             # Ép thoát khỏi widget để Form có thể xử lý while_waiting
@@ -49,6 +49,6 @@ class ProcessBox(npyscreen.BoxTitle):
             if hasattr(self.parent, 'editing'):
                 self.parent.editing = False
         except (IndexError, ValueError):
-            npyscreen.notify_wait("Không thể lấy PID từ dòng đã chọn.", title="Lỗi")
+            npyscreen.notify_wait("Cannot get PID from line selected.", title="Error")
             
     
