@@ -1,6 +1,10 @@
 # Process-Manager
 This project simulates the task manager like in windows on ubuntu.
 
+## Demo
+![Demo](test/demo.gif)
+
+## Run
 To run this app you must be in terminal window!
 
 ```bash
