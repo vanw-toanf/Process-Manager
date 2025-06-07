@@ -1,7 +1,7 @@
 import npyscreen
 import threading
 import time
-from _4_system_data import CRP_control
+from _3_system_data import CRP_control
 
 class AutoUpdateProcessBox(npyscreen.BoxTitle):
     _contained_widget = npyscreen.MultiLine

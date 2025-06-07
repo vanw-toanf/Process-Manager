@@ -1,5 +1,5 @@
 import npyscreen
-from _4_system_data import CRP_control
+from _3_system_data import CRP_control
 from _1_auto_run.running_process import destroy_CRP_threads, pause_CRP_threads
 import os
 from log.log import Logger
@@ -18,7 +18,6 @@ class ProcessBox(npyscreen.BoxTitle):
         self.update_data()
         self.entry_widget.add_handlers({
             ord('m'): self.handle_selection,
-            ord('q'): self.terminate_process,
         })
         self.next_form = 'SECOND'  # Default next form
 
@@ -52,15 +51,4 @@ class ProcessBox(npyscreen.BoxTitle):
         except (IndexError, ValueError):
             npyscreen.notify_wait("Không thể lấy PID từ dòng đã chọn.", title="Lỗi")
             
-    def terminate_process(self, _):
-        selected_string = self.entry_widget.values[self.entry_widget.cursor_line]
-        try:
-            pid = int(selected_string.strip().split()[0])
-            import psutil
-            proc = psutil.Process(pid)
-            proc.terminate()
-            npyscreen.notify_confirm(f"Đã gửi tín hiệu terminate tới PID {pid}", title="Terminate")
-            self.update_data()
-        except Exception as e:
-            npyscreen.notify_confirm(f"Lỗi khi terminate PID: {e}", title="Lỗi")
-
+    

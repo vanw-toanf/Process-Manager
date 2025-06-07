@@ -8,7 +8,7 @@ from _2_display_module.process.process_layout import ProcessBox
 from _2_display_module.process.process_detail_layout import AutoUpdateProcessBox, ProcessMonitorForm
 
 from _1_auto_run.running_process import start_CRP_threads, destroy_CRP_threads, pause_CRP_threads, resume_CRP_threads
-from _4_system_data import CRP_control
+from _3_system_data import CRP_control
 from log.log import Logger
 log = Logger(os.path.abspath("app.log"))
 class MainForm(npyscreen.Form):
@@ -31,7 +31,7 @@ class MainForm(npyscreen.Form):
                 f"Vui lòng mở rộng terminal rồi chạy lại."
             )
             self.add(npyscreen.TitleFixedText, name="CẢNH BÁO", value=warning)
-            self.disable_form = True  # 🔧 Cờ để tránh xử lý widget tiếp theo
+            self.disable_form = True  #  Cờ để tránh xử lý widget tiếp theo
             return
         else:
             self.disable_form = False
@@ -60,12 +60,22 @@ class MainForm(npyscreen.Form):
         self.process_box.is_visible = True
         self.resource_box.is_visible = True
         self._exit_to_second = False   # Reset lại để không tự động sang form 2
+        self.process_box.update_data()
         resume_CRP_threads()
+        try:
+            self.resource_box.update_data()
+        except AttributeError:
+            pass
+
+        # 4) Ép NPyscreen redraw toàn bộ form
+        self.display()
+        
     def go_to_second_form(self):
         self.process_box.is_visible = False
         self.resource_box.is_visible = False
         pause_CRP_threads()
-        self.next_form = 'SECOND'
+        
+        self._exit_to_second = True
         self.editing = False
     def afterEditing(self):
         if getattr(self, '_exit_to_second', False):

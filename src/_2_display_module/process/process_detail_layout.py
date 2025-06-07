@@ -1,7 +1,7 @@
 import npyscreen
 import threading
 import time
-from _4_system_data import CRP_control
+from _3_system_data import CRP_control
 from _1_auto_run.running_process import destroy_CRP_threads, resume_CRP_threads
 from log.log import Logger
 import os
@@ -86,7 +86,7 @@ class ProcessMonitorForm(npyscreen.ActionFormMinimal):
     def create(self):
         log.log_info("SECOND form create() called")
         y, x = self.useable_space()
-        self.add(npyscreen.FixedText, value="=== FORM 2 ===", rely=1, relx=2, editable=False)
+        self.add(npyscreen.FixedText, value="=== INFORMATION ===", rely=1, relx=2, editable=False)
         
         # PID Input
         self.pid_input = self.add(
@@ -115,10 +115,18 @@ class ProcessMonitorForm(npyscreen.ActionFormMinimal):
             when_pressed_function=self.on_set_pid
         )
         
+        self.term_btn = self.add(
+            npyscreen.ButtonPress,
+            rely=18,
+            relx=12,
+            name="Terminate",
+            when_pressed_function=self.on_terminate
+        )
+        
         self.exit_btn = self.add(
             npyscreen.ButtonPress,
             rely=18,
-            relx=20,
+            relx=24,
             name="Exit",
             when_pressed_function=self.on_exit
         )
@@ -138,7 +146,36 @@ class ProcessMonitorForm(npyscreen.ActionFormMinimal):
         resume_CRP_threads()
         self.parentApp.setNextForm('MAIN') 
         self.editing = False
-     
+    
+    def on_terminate(self):
+        pid = self.process_box.pid
+        if pid is None:
+            npyscreen.notify_confirm("Chưa có PID để terminate!", title="Error")
+            curses.flushinp()
+            return
+
+        # Xác nhận
+        if not npyscreen.notify_yes_no(f"Bạn có chắc muốn terminate PID {pid}?", title="Confirm", editw=1):
+            curses.flushinp()
+            return
+        
+        # Gọi backend terminate
+        success, msg = CRP_control.terminate_process_by_pid(pid)
+        title = "Success" if success else "Error"
+        npyscreen.notify_confirm(msg, title=title)
+        curses.flushinp()
+
+        if success:
+            # Nếu terminate thành công, dừng update, resume threads, quay về MainForm
+            self.process_box._stop_auto_update()
+            resume_CRP_threads()
+            self.parentApp.setNextForm('MAIN')
+            self.editing = False
+        else:
+            # Nếu thất bại, ở lại Form 2 và vẫn auto-update
+            self.process_box.entry_widget.values = [msg]
+            self.process_box.entry_widget.display()
+            
     def while_waiting(self):
         try:
             stdscr = curses.initscr()

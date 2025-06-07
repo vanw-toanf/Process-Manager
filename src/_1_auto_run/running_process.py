@@ -3,7 +3,7 @@ import sys
 import os
 from log.log import Logger
 import time
-from _4_system_data import CRP_control
+from _3_system_data import CRP_control
 log = Logger(os.path.abspath("app.log"))
 
 # Thread control
