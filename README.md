@@ -19,15 +19,3 @@ This is a simple process management application for Linux, developed in Python. 
 - Suspend and resume processes.
 - Terminate and kill processes by PID.
 
-## Contributers
-- [Giang Trinh](https://github.com/TrinhHuuGiang)  
-  - **Role**: Project Manager, Lead Developer  
-  - **Contributions**: Main code development, project management, and leading the TUI implementation using `curses`.
-
-- [VuongNQ](https://github.com/nqv96)  
-  - **Role**: Developer, Tester  
-  - **Contributions**: Process management using `psutil`, testing, and documenting the process management features.
-
-- [haidang143](https://github.com/haidang143)  
-  - **Role**: Documentation Specialist  
-  - **Contributions**: Writing documentation for CPU, RAM, and disk usage.
