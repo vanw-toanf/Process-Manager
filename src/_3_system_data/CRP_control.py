@@ -1,19 +1,13 @@
 import psutil
 from datetime import datetime
 
-list_proc = None    # A list of dictionaries containing process details:
-                    # Includes: "pid" (Process ID), "name" (Name), "cpu_percent" (CPU usage %),
-                    # "memory_percent" (Memory usage %), "status" (Current status),
-                    # "create_time" (Time the process has been running, formatted).
+list_proc = None   # (PID, ten, %CPU, %RAm, trang thai, thoi gian chay)
 
-leng_proc = 0  # Count of processes in the list
+leng_proc = 0  # khai bao so luong list proc ban dau
 
-total_core = psutil.cpu_count() # Total number of CPU cores.
-                    # Note: "cpu_percent" returns the overall percentage
-                    # across all cores for a process,
-                    # so it must be divided by the number of cores to get per-core usage.
+total_core = psutil.cpu_count() # dung thu vien de tinh tong so loi tren CPU
 
-sort_order = 0  # Sorting order for the process list:
+sort_order = 0  # xac dinh thu tu sap xep, vi du chon 1 thi sap xep theo ten
                 # 0 = by PID, 1 = by Name, 2 = by %CPU, 3 = by %RAM,
                 # 4 = by Status, 5 = by Runtime.
 
@@ -31,8 +25,8 @@ total_resource_info = None # Dictionary to store overall system statistics:
 #     "zombie": Count of zombie processes,
 # }
 
-PID_object = None # Reference to a Process object for actions like suspend, resume, terminate, or kill.
-PID_properties = None  # Dictionary to store process properties as string values:
+PID_object = None # Bien toan cuc PID_OBJECT Reference to a Process object for actions like suspend, resume, terminate, or kill.
+PID_properties = None  # Bien toan cuc PID_properties Dictionary to store process properties as string values:
 # Structure:
 # {
 #     "Name": Name of the process (str)
@@ -58,14 +52,14 @@ PID_properties = None  # Dictionary to store process properties as string values
 # }
 
 #Functions for process list management
-def format_elapsed_hhmmss(elapsed_time):
+def format_elapsed_hhmmss(elapsed_time): #ham dinh dang thoi gian troi qua ve dang gio:phut:giay
     """Format the elapsed time into hh:mm:ss."""
-    seconds = int(elapsed_time.total_seconds())
+    seconds = int(elapsed_time.total_seconds()) # chuyen thoi gian troi qua thanh dang so giay nguyen
     hours, remainder = divmod(seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
     return f"{hours}:{minutes:02}:{seconds:02}"
 
-def sort_by_order():
+def sort_by_order(): #ham sap xep danh dach
     '''Sort the process list based on the specified sorting criteria.'''
     global list_proc, sort_order
     if sort_order == 0:  # Sort by PID
@@ -73,9 +67,9 @@ def sort_by_order():
     elif sort_order == 1:  # Sort by process name
         list_proc.sort(key=lambda p: p["name"].lower())  # Case-insensitive sorting
     elif sort_order == 2:  # Sort by CPU usage (%)
-        list_proc.sort(key=lambda p: float(p["cpu_percent"].rstrip('%')), reverse=True)
+        list_proc.sort(key=lambda p: float(p["cpu_percent"].rstrip('%')), reverse=True) #thu tu sap xep giam dan
     elif sort_order == 3:  # Sort by RAM usage (%)
-        list_proc.sort(key=lambda p: float(p["memory_percent"].rstrip('%')), reverse=True)
+        list_proc.sort(key=lambda p: float(p["memory_percent"].rstrip('%')), reverse=True) # thu tu sap xep giam dan
     elif sort_order == 4:  # Sort by process status
         list_proc.sort(key=lambda p: p["status"])
     elif sort_order == 5:  # Sort by runtime
@@ -94,7 +88,7 @@ def get_list_proc():
     now = datetime.now()
     
     # Fetch process data
-    for p in psutil.process_iter(["pid", "name", "cpu_percent", "memory_percent", "status", "create_time"]):
+    for p in psutil.process_iter(["pid", "name", "cpu_percent", "memory_percent", "status", "create_time"]): #dung thu vien de lap qua tat ca cac tien trinh va lay cac thong so can co o nhung tien trinh do
         try:
             # Format each process's information
             proc_info = p.info
@@ -106,27 +100,27 @@ def get_list_proc():
             #     'create_time': 1717645910.123,
             #     'memory_info': pmem(rss=24805376, vms=78675968, shared=983040, text=4096, lib=0, data=12369920, dirty=0)
             #   }
-            proc_info["cpu_percent"] = proc_info["cpu_percent"] / total_core
-            proc_info["cpu_percent"] = f"{proc_info['cpu_percent']:.1f}%"  # Format CPU usage
-            proc_info["memory_percent"] = f"{proc_info['memory_percent']:.1f}%"  # Format RAM usage
+            proc_info["cpu_percent"] = proc_info["cpu_percent"] / total_core #tinh phan tram cpu so voi tong cpu
+            proc_info["cpu_percent"] = f"{proc_info['cpu_percent']:.1f}%"  # lam tron he so cua CPU
+            proc_info["memory_percent"] = f"{proc_info['memory_percent']:.1f}%"  # lam tron he so CPU
 
             # Calculate elapsed runtime
             if "create_time" in proc_info and proc_info["create_time"] is not None:
                 create_time = datetime.fromtimestamp(proc_info["create_time"])
                 elapsed_time = now - create_time
-                proc_info["create_time"] = format_elapsed_hhmmss(elapsed_time)
+                proc_info["create_time"] = format_elapsed_hhmmss(elapsed_time) #tinh thoi gian chay bang cach lay hieu thoi gian hien tai va thoi gian bat dau tao ra
 
             # Append process information to the list
             list_proc.append(proc_info)
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess): # khi psutil kiem tra bao cac loi ngoai le thi bo qua tien trinh do
             # Ignore inaccessible processes
             continue
 
     # Update process count
-    leng_proc = len(list_proc)
+    leng_proc = len(list_proc) # tang danh sach tien trinh dang co
 
     # Sort the process list based on the current order
-    sort_by_order()
+    sort_by_order() #chay lenh sap xep theo mode 
 
 #Functions for system resource statistics
 def get_dict_total_resource():
@@ -146,14 +140,14 @@ def get_dict_total_resource():
         "zombie": 0,
     }
 
-    # Gather data
+    # Gather data - thu thap tong toan bo cac tai nguyen
     total_resource_info["cpu_percent"] = psutil.cpu_percent(interval=None)
     total_resource_info["total_ram"] = psutil.virtual_memory().total // (1024 ** 2)
     total_resource_info["used_ram"] = psutil.virtual_memory().used // (1024 ** 2)
     total_resource_info["current_time"] = datetime.now().strftime("%H:%M")
     total_resource_info["total_pid"] = len(psutil.pids())
 
-    for proc in psutil.process_iter(['status']):
+    for proc in psutil.process_iter(['status']): # dem so tien trinh dang o trang thai nao
         try:
             status = proc.info['status']
             if status == psutil.STATUS_RUNNING:
@@ -182,13 +176,14 @@ def get_process_info(pid):
     global PID_properties
     global total_core
     try:
-        PID_object = psutil.Process(pid)  # Tạo đối tượng Process
+        PID_object = psutil.Process(pid)  # Tạo đối tượng Process - y la khi muon chuyen sang phan chi hien thi 1 PID thi nhan dau vao tu tham so PID va dung thu vien de lay ra cac thong so PID
         info = PID_object.as_dict(attrs=[
             "name", "username", "status", "pid", "ppid", "cmdline",
             "exe", "cwd", "memory_info", "memory_percent",
             "cpu_num", "create_time",
             "num_threads", "io_counters", "open_files"
         ])
+        # tinh du lieu cpu_percent thi dung them cong thuc
 
         info["cpu_percent"] = None
         for item in psutil.process_iter(["pid", "cpu_percent"]):
@@ -217,8 +212,8 @@ def get_process_info(pid):
             "Command": " ".join(info.get("cmdline", [])) if info.get("cmdline") else "N/A",
             "Executable": str(info.get("exe", "N/A")),
             "CWD": str(info.get("cwd", "N/A")),
-            "MEM_VMS": f"{vms_mb:.2f}",#MB
-            "MEM_RSS": f"{rss_mb:.2f}",#MB
+            "MEM_VMS": f"{vms_mb:.2f}",#MB // virtual memory
+            "MEM_RSS": f"{rss_mb:.2f}",#MB // bo nho thuc
             "MEM_Percent": f"{info.get('memory_percent', 'N/A'):.2f}",#(%)
             "CPU Num": str(info.get("cpu_num", "N/A")),
             "CPU Usage": f"{info.get('cpu_percent', 'N/A'):.2f}",#%
@@ -243,7 +238,7 @@ def get_process_info(pid):
     #ok 
     return 0
 
-def terminate_process_by_pid(pid):
+def terminate_process_by_pid(pid): # ngat tien trinh, giai phong bo nho roi moi kill
     """
     Send a terminate signal to a process based on its PID.
     Return (True, "Success message") or (False, "Error message").
